@@ -21,10 +21,10 @@ const Callback: React.FC = () => {
                         throw new Error('Failed to fetch access token');
                     }
 
-                    const data = await response.json(); // Use json() instead of text() for structured data
-                    setAccessToken(data.access_token); // Store the access token
+                    const data = await response.json();
+                    setAccessToken(data.access_token); 
                 } catch (error: any) {
-                    setError(error.message); // Set error message
+                    setError(error.message); 
                 }
             } else {
                 setError('No authorization code found in the URL');
