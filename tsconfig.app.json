@@ -1,0 +1,14 @@
+{
+    "extends": "./tsconfig.json", // Reference the base tsconfig
+    "compilerOptions": {
+      "jsx": "react",                     // Enable JSX support
+      "allowImportingTsExtensions": true, // Allow .ts and .tsx imports
+      "strict": true,                     // Optional: enable strict mode
+      "noEmit": true,                     // Prevent emitting output files
+      "module": "esnext",                 // Set module type to esnext or es2015
+      "moduleResolution": "bundler"       // Use bundler module resolution strategy
+    },
+    "include": ["src/**/*"],               // Include all files in src
+    "exclude": ["node_modules"]            // Exclude node_modules
+  }
+  
