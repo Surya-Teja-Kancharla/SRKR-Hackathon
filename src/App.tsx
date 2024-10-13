@@ -7,6 +7,7 @@ import PatientProfile from './pages/PatientProfile';
 import CarePlan from './pages/CarePlan';
 import HealthMetrics from './pages/HealthMetrics';
 import Notifications from './pages/Notifications';
+import Callback from './pages/Callback'; // Import the Callback component
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Route path="/care-plan" element={<CarePlan />} />
             <Route path="/health-metrics" element={<HealthMetrics />} />
             <Route path="/notifications" element={<Notifications />} />
+            <Route path="/callback" element={<Callback />} /> {/* Add this route */}
           </Routes>
         </main>
         <Footer />

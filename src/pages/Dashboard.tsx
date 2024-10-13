@@ -3,6 +3,26 @@ import { Link } from 'react-router-dom';
 import { Activity, Heart, Thermometer, Droplet } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
+  const handleLogin = () => {
+    const CLIENT_ID = process.env.REACT_APP_CLIENT_ID; // Access the Client ID from .env
+    const REDIRECT_URI = 'http://localhost:5173/callback'; // Your redirect URI
+    const SCOPE = 'https://www.googleapis.com/auth/userinfo.profile'; // Scopes you need
+
+    // Check if CLIENT_ID is available
+    if (!CLIENT_ID) {
+      console.error("CLIENT_ID is not defined in .env file");
+      return;
+    }
+
+    const authUrl = `https://accounts.google.com/o/oauth2/auth?` +
+                    `client_id=${CLIENT_ID}&` +
+                    `redirect_uri=${REDIRECT_URI}&` +
+                    `response_type=code&` +
+                    `scope=${encodeURIComponent(SCOPE)}`;
+
+    window.location.href = authUrl; // Redirect the user to Google for authorization
+  };
+
   return (
     <div>
       <h1 className="text-3xl font-bold mb-6">Patient Dashboard</h1>
@@ -51,6 +71,14 @@ const Dashboard: React.FC = () => {
             time="5 hours ago"
           />
         </ul>
+      </div>
+      <div className="mt-8">
+        <button
+          onClick={handleLogin}
+          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition"
+        >
+          Login with Google
+        </button>
       </div>
     </div>
   );
