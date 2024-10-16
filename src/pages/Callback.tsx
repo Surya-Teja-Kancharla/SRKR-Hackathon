@@ -18,7 +18,7 @@ const Callback: React.FC = () => {
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({ code }), // Send the code as JSON
+                        body: JSON.stringify({ code }), 
                     });
 
                     if (!response.ok) {

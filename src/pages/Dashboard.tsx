@@ -6,10 +6,12 @@ import axios from 'axios'; // Import axios to make API calls
 const Dashboard: React.FC = () => {
   const location = useLocation(); // Access the URL
   const CLIENT_ID = import.meta.env.VITE_CLIENT_ID; // Client ID from Vite environment variable
-  const REDIRECT_URI = 'http://localhost:3000/callback'; // Your frontend redirect URI
+  const REDIRECT_URI = 'http://localhost:5173/callback'; // Your frontend redirect URI
   const SCOPE = 'https://www.googleapis.com/auth/userinfo.profile'; // Scopes you need
   
   const handleLogin = () => {
+    console.log(CLIENT_ID);
+    console.log(REDIRECT_URI);
     const authUrl = `https://accounts.google.com/o/oauth2/auth?` +
                     `client_id=${CLIENT_ID}&` +
                     `redirect_uri=${REDIRECT_URI}&` +

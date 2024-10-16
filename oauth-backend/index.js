@@ -12,9 +12,12 @@ app.use(express.json()); // Parse incoming JSON requests
 // Endpoint to handle token exchange
 app.post('/token', async (req, res) => {
   const { code } = req.body; // Authorization code sent from the frontend
-  const CLIENT_ID = process.env.CLIENT_ID; // Client ID from environment variables
-  const CLIENT_SECRET = process.env.CLIENT_SECRET; // Client Secret from environment variables
-  const REDIRECT_URI = process.env.REDIRECT_URI; // Should match your OAuth setup
+
+  // Accessing environment variables
+  const CLIENT_ID = process.env.VITE_CLIENT_ID; // Client ID from environment variables
+  const CLIENT_SECRET = process.env.VITE_CLIENT_SECRET; // Client Secret from environment variables
+  const REDIRECT_URI = process.env.VITE_API_URL; // Should match your OAuth setup
+  console.log(CLIENT_ID,CLIENT_SECRET,REDIRECT_URI);
 
   try {
     // Exchange the authorization code for access and refresh tokens
@@ -25,6 +28,7 @@ app.post('/token', async (req, res) => {
       redirect_uri: REDIRECT_URI,
       grant_type: 'authorization_code',
     });
+    console.log(tokenResponse);
 
     const { access_token, refresh_token, id_token } = tokenResponse.data;
 
