@@ -1,19 +1,15 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom'; // Import useLocation to capture URL params
 import { Activity, Heart, Thermometer, Droplet } from 'lucide-react';
+import axios from 'axios'; // Import axios to make API calls
 
 const Dashboard: React.FC = () => {
+  const location = useLocation(); // Access the URL
+  const CLIENT_ID = import.meta.env.VITE_CLIENT_ID; // Client ID from Vite environment variable
+  const REDIRECT_URI = 'http://localhost:3000/callback'; // Your frontend redirect URI
+  const SCOPE = 'https://www.googleapis.com/auth/userinfo.profile'; // Scopes you need
+  
   const handleLogin = () => {
-    const CLIENT_ID = process.env.REACT_APP_CLIENT_ID; // Access the Client ID from .env
-    const REDIRECT_URI = 'http://localhost:5173/callback'; // Your redirect URI
-    const SCOPE = 'https://www.googleapis.com/auth/userinfo.profile'; // Scopes you need
-
-    // Check if CLIENT_ID is available
-    if (!CLIENT_ID) {
-      console.error("CLIENT_ID is not defined in .env file");
-      return;
-    }
-
     const authUrl = `https://accounts.google.com/o/oauth2/auth?` +
                     `client_id=${CLIENT_ID}&` +
                     `redirect_uri=${REDIRECT_URI}&` +
@@ -22,6 +18,31 @@ const Dashboard: React.FC = () => {
 
     window.location.href = authUrl; // Redirect the user to Google for authorization
   };
+
+  useEffect(() => {
+    const exchangeCodeForToken = async (code: string) => {
+      try {
+        const response = await axios.post('http://localhost:3000/token', { code });
+        const { access_token, refresh_token, id_token, userInfo } = response.data;
+
+        // Store tokens or user info in local storage or state
+        localStorage.setItem('access_token', access_token);
+        localStorage.setItem('refresh_token', refresh_token);
+        localStorage.setItem('user_info', JSON.stringify(userInfo));
+      } catch (error) {
+        console.error('Token exchange failed:', error);
+      }
+    };
+
+    // Get the authorization code from the URL if it's present
+    const queryParams = new URLSearchParams(location.search);
+    const code = queryParams.get('code');
+
+    if (code) {
+      // Exchange the authorization code for tokens
+      exchangeCodeForToken(code);
+    }
+  }, [location]);
 
   return (
     <div>

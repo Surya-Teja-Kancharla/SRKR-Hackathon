@@ -9,7 +9,7 @@ import HealthMetrics from './pages/HealthMetrics';
 import Notifications from './pages/Notifications';
 import Callback from './pages/Callback'; // Import the Callback component
 
-function App() {
+const App: React.FC = () => {
   return (
     <Router>
       <div className="flex flex-col min-h-screen bg-gray-100">
@@ -28,6 +28,6 @@ function App() {
       </div>
     </Router>
   );
-}
+};
 
 export default App;

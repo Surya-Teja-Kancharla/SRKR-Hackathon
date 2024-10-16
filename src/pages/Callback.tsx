@@ -13,8 +13,12 @@ const Callback: React.FC = () => {
 
             if (code) {
                 try {
-                    const response = await fetch(`http://localhost:3000/callback?code=${code}`, {
-                        method: 'GET',
+                    const response = await fetch('http://localhost:3000/token', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ code }), // Send the code as JSON
                     });
 
                     if (!response.ok) {
@@ -22,9 +26,9 @@ const Callback: React.FC = () => {
                     }
 
                     const data = await response.json();
-                    setAccessToken(data.access_token); 
+                    setAccessToken(data.access_token); // Store the access token
                 } catch (error: any) {
-                    setError(error.message); 
+                    setError(error.message);
                 }
             } else {
                 setError('No authorization code found in the URL');
