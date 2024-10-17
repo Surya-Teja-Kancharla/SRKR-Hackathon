@@ -1,45 +1,55 @@
+require('dotenv').config(); // Load environment variables
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
-require('dotenv').config();
 
 const app = express();
-const PORT = 3000;
 
+// Enable CORS if frontend and backend are on different origins
 app.use(cors());
-app.use(express.json());
+app.use(express.json()); // Parse incoming JSON requests
 
-// Root route
-app.get('/', (req, res) => {
-    res.send('OAuth Backend Server is running');
+// Endpoint to handle token exchange
+app.post('/token', async (req, res) => {
+  const { code } = req.body; // Authorization code sent from the frontend
+
+  // Accessing environment variables
+  const CLIENT_ID = process.env.VITE_CLIENT_ID; // Client ID from environment variables
+  const CLIENT_SECRET = process.env.VITE_CLIENT_SECRET; // Client Secret from environment variables
+  const REDIRECT_URI = process.env.VITE_API_URL; // Should match your OAuth setup
+  console.log(CLIENT_ID,CLIENT_SECRET,REDIRECT_URI);
+
+  try {
+    // Exchange the authorization code for access and refresh tokens
+    const tokenResponse = await axios.post('https://oauth2.googleapis.com/token', {
+      code,
+      client_id: CLIENT_ID,
+      client_secret: CLIENT_SECRET,
+      redirect_uri: REDIRECT_URI,
+      grant_type: 'authorization_code',
+    });
+    console.log(tokenResponse);
+
+    const { access_token, refresh_token, id_token } = tokenResponse.data;
+
+    // Optionally, retrieve user info using the access token
+    const userInfoResponse = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo', {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+
+    const userInfo = userInfoResponse.data;
+
+    // Send the tokens and user info back to the frontend
+    res.json({ access_token, refresh_token, id_token, userInfo });
+  } catch (error) {
+    console.error('Error exchanging code for token:', error.response?.data || error.message);
+    res.status(500).send('Token exchange failed');
+  }
 });
 
-// Endpoint to handle the OAuth callback
-app.get('/callback', async (req, res) => {
-    const { code } = req.query;
-
-    if (!code) {
-        return res.status(400).send('Authorization code not provided');
-    }
-
-    try {
-        // Exchange authorization code for access token
-        const tokenResponse = await axios.post('https://oauth2.googleapis.com/token', {
-            code,
-            client_id: process.env.CLIENT_ID,
-            client_secret: process.env.CLIENT_SECRET,
-            redirect_uri: process.env.REDIRECT_URI,
-            grant_type: 'authorization_code'
-        });
-
-        // Return access token to the frontend
-        res.send(tokenResponse.data);
-    } catch (error) {
-        console.error('Error fetching access token:', error);
-        res.status(500).send('Failed to fetch access token');
-    }
-});
-
+const PORT = process.env.PORT || 3000; // Use PORT from env or default to 3000
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`OAuth server is running on http://localhost:${PORT}`);
 });
