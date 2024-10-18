@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Activity, Heart, Droplet, Percent, CheckCircle, ChevronLeft, ChevronRight } from 'lucide-react';
+import './Dashboard.css';
 
 const Dashboard: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<string>(new Date().toLocaleDateString());
@@ -141,31 +142,11 @@ const DailyStreakCalendar: React.FC<{ onDateClick: (date: string) => void }> = (
         {[...Array(daysInMonth)].map((_, index) => (
           <div
             key={index}
-            className={`w-8 h-8 rounded-full ${index % 2 === 0 ? ' bg-green-500' : 'bg-red-500'} hover:bg-blue-500 transition cursor-pointer`}
+            className={`w-8 h-8 rounded-full ${index % 2 === 0 ? 'bg-green-500' : 'bg-red-500'} hover:bg-blue-500 transition cursor-pointer`}
             title={`Date: ${index + 1}`}
             onClick={() => onDateClick(`${currentYear}-${currentMonth + 1}-${index + 1}`)}
           >
             <span className="text-white">{index + 1}</span> {/* Displaying the date number */}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-// Recent Notifications Component
-const RecentNotifications: React.FC<{ notifications: { goal: string; completed: boolean }[] }> = ({ notifications }) => {
-  return (
-    <div className="bg-white p-6 rounded-lg shadow-md w-full">
-      <h3 className="text-lg font-semibold mb-4">Recent Notifications</h3>
-      <div className="overflow-y-auto max-h-48">
-        {notifications.map((notification, index) => (
-          <div
-            key={index}
-            className={`flex justify-between items-center mb-4 p-4 rounded-lg ${notification.completed ? 'bg-green-100' : 'bg-red-100'}`}
-          >
-            <p className="text-lg font-bold">{notification.goal}</p>
-            <p className={`text-lg ${notification.completed ? 'text-green-500' : 'text-red-500'}`}>{notification.completed ? 'Completed' : 'Not Completed'}</p>
           </div>
         ))}
       </div>
@@ -178,13 +159,13 @@ const DashboardCard: React.FC<{ title: string; value: string; icon: React.ReactN
   return (
     <Link
       to={link}
-      className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+      className="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
     >
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold">{title}</h3>
-        {icon}
+      <div className="flex items-center justify-between mb-6">
+        <h3 className="text-xl font-semibold">{title}</h3>
+        <div className="scale-125">{icon}</div> {/* Increased icon size */}
       </div>
-      <p className="text-3xl font-bold">{value}</p>
+      <p className="text-4xl font-extrabold">{value}</p> {/* Larger font size */}
     </Link>
   );
 };
@@ -209,19 +190,19 @@ const StepsCard: React.FC<{ steps: number; goal: number; date: string }> = ({ st
       </div>
       <div className="flex justify-center items-center mb-2">
         <div className="relative">
-          <svg width="120" height="120">
+          <svg width="140" height="140"> {/* Increase SVG size */}
             <circle
-              cx="60"
-              cy="60"
-              r="50"
+              cx="70" // Center x
+              cy="70" // Center y
+              r="60" // Increase radius
               stroke="orange"
               strokeWidth="5"
               fill="none"
-              strokeDasharray="440"
-              strokeDashoffset={animate ? '0' : '440'}
-              className={animate ? 'animate-fill' : ''}
+              strokeDasharray="376.8" // Adjusted for new radius
+              strokeDashoffset={animate ? '0' : '376.8'} // Adjusted for new radius
+              className={`transition-all duration-700 ease-in-out ${animate ? 'animate-fill' : ''}`}
             />
-            <text x="60" y="65" textAnchor="middle" fontSize="18" fill="#000">
+            <text x="70" y="75" textAnchor="middle" fontSize="18" fill="#000">
               {steps}/{goal}
             </text>
           </svg>
@@ -242,29 +223,29 @@ const GoalsCard: React.FC<{ goalsCompleted: number; goalsTotal: number; date: st
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
-      <h3 className="text-lg font-semibold mb-2">Today's Goals</h3>
+      <h3 className="text-lg font-semibold mb-2">Goals for Today</h3>
       <div className="flex items-center justify-between mb-4">
         <CheckCircle
-          className={`text-green-500 ${animate ? 'animate-fill' : ''}`}
+          className={`text-blue-500 ${animate ? 'animate-fill' : ''}`}
           size={24}
         />
-        <p className="text-3xl font-bold">{goalsCompleted} goals</p>
+        <p className="text-3xl font-bold">{goalsCompleted}/{goalsTotal} completed</p>
       </div>
       <div className="flex justify-center items-center mb-2">
         <div className="relative">
-          <svg width="120" height="120">
+          <svg width="140" height="140"> {/* Increase SVG size */}
             <circle
-              cx="60"
-              cy="60"
-              r="50"
-              stroke="green"
+              cx="70" // Center x
+              cy="70" // Center y
+              r="60" // Increase radius
+              stroke="blue"
               strokeWidth="5"
               fill="none"
-              strokeDasharray="440"
-              strokeDashoffset={animate ? '0' : '440'}
-              className={animate ? 'animate-fill' : ''}
+              strokeDasharray="376.8" // Adjusted for new radius
+              strokeDashoffset={animate ? '0' : '376.8'} // Adjusted for new radius
+              className={`transition-all duration-700 ease-in-out ${animate ? 'animate-fill' : ''}`}
             />
-            <text x="60" y="65" textAnchor="middle" fontSize="18" fill="#000">
+            <text x="70" y="75" textAnchor="middle" fontSize="18" fill="#000">
               {goalsCompleted}/{goalsTotal}
             </text>
           </svg>
